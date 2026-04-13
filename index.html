@@ -236,6 +236,51 @@
             display: flex; gap: 16px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory;
         }
         .horizontal-scroll .product-card { min-width: 200px; flex-shrink: 0; scroll-snap-align: start; }
+        .mini-book-card {
+            min-width: 180px !important;
+            border-radius: 14px;
+            border: 1px solid rgba(106, 120, 255, 0.45);
+            background:
+                linear-gradient(145deg, rgba(18, 18, 18, 0.95), rgba(28, 28, 28, 0.95)),
+                linear-gradient(125deg, rgba(255, 94, 98, 0.14), rgba(94, 114, 255, 0.18), rgba(59, 224, 195, 0.15));
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+            overflow: hidden;
+        }
+        .mini-book-card:hover {
+            transform: translateY(-7px);
+            border-color: rgba(59, 224, 195, 0.75);
+            box-shadow: 0 12px 28px rgba(94, 114, 255, 0.28);
+        }
+        .mini-book-card .mini-cover {
+            height: 145px;
+            background:
+                radial-gradient(circle at 22% 20%, rgba(255, 94, 98, 0.25), transparent 45%),
+                radial-gradient(circle at 78% 25%, rgba(94, 114, 255, 0.28), transparent 50%),
+                linear-gradient(160deg, #242424, #151515);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d6d6d6;
+            font-size: 2.05rem;
+            border-bottom: 1px solid rgba(120, 120, 120, 0.26);
+        }
+        .mini-book-card .mini-meta {
+            padding: 11px 12px 13px;
+            text-align: left;
+        }
+        .mini-book-card .mini-meta h4 {
+            font-size: 14px;
+            color: #f8f8f8;
+            margin-bottom: 4px;
+            line-height: 1.35;
+        }
+        .mini-book-card .mini-meta p {
+            margin: 0;
+            color: #9f9f9f;
+            font-size: 12px;
+            line-height: 1.35;
+        }
 
         .electronics-section { padding: 40px 5%; background: linear-gradient(180deg, #0a1628 0%, #0d0d0d 100%); border-top: 1px solid #1e3a5f; }
         .electronics-section .section-title { margin-bottom: 20px; }
@@ -1512,25 +1557,42 @@
             });
         }
 
-        function buildMiniCard(title, author) {
+        function buildMiniCard(item) {
+            const title = item && item.title ? item.title : "নমুনা বই";
+            const author = item && item.author ? item.author : "লেখক";
             return (
-                '<div class="product-card" style="min-width:160px">' +
-                '<div class="product-img" style="height:140px;background:#252525"><span style="display:flex;align-items:center;justify-content:center;height:100%;color:#555;font-size:2rem">📖</span></div>' +
-                '<div class="product-info"><h4 style="font-size:14px">' + title + "</h4>" +
-                '<p class="author" style="font-size:12px">' + author + "</p></div></div>"
+                '<article class="product-card mini-book-card">' +
+                '<div class="mini-cover">📖</div>' +
+                '<div class="mini-meta"><h4>' + title + '</h4><p>' + author + "</p></div>" +
+                "</article>"
             );
+        }
+
+        // HINT: সব mini row (Weekly + Category) এর বই এক জায়গা থেকে edit করতে চাইলে নিচে title/author বদলান।
+        const BOOK_SOURCE = {
+            "paradoxical-sajid": { title: "প্যারাডক্সিক্যাল সাজিদ", author: "আরিফ আজাদ" },
+            "himu-neelpoddo": { title: "হিমুর হাতে কয়েকটি নীলপদ্ম", author: "হুমায়ূন আহমেদ" },
+            "chouddogoshti": { title: "প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী", author: "ঝংকার মাহবুব" },
+            "sample-1": { title: "নমুনা বই ১", author: "লেখক" },
+            "sample-2": { title: "নমুনা বই ২", author: "লেখক" },
+            "sample-3": { title: "নমুনা বই ৩", author: "লেখক" },
+            "sample-4": { title: "নমুনা বই ৪", author: "লেখক" }
+        };
+
+        // HINT: Weekly row-তে বই দেখাতে নিচের key গুলো দিন (key অবশ্যই BOOK_SOURCE এ থাকতে হবে)।
+        const WEEKLY_BOOK_KEYS = ["paradoxical-sajid", "himu-neelpoddo", "chouddogoshti"];
+
+        function resolveBooksFromKeys(keys) {
+            return (keys || []).map(function (key) {
+                return BOOK_SOURCE[key];
+            }).filter(Boolean);
         }
 
         function populateWeeklyRow() {
             const row = document.getElementById("weekly-scroll");
             if (!row) return;
-            // HINT: Weekly বই যোগ করতে এই items array-তে নতুন ["বই নাম", "লেখক"] লাইন যোগ করুন।
-            const items = [
-                ["প্যারাডক্সিক্যাল সাজিদ", "আরিফ আজাদ"],
-                ["হিমুর হাতে কয়েকটি নীলপদ্ম", "হুমায়ূন আহমেদ"],
-                ["প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী", "ঝংকার মাহবুব"]
-            ];
-            row.innerHTML = items.map(function (x) { return buildMiniCard(x[0], x[1]); }).join("");
+            const books = resolveBooksFromKeys(WEEKLY_BOOK_KEYS);
+            row.innerHTML = books.map(function (item) { return buildMiniCard(item); }).join("");
         }
 
         // HINT: নতুন ক্যাটাগরি রো যোগ করতে নিচে নতুন object দিন: { title: "ক্যাটাগরি নাম", slug: "unique-slug" }
@@ -1549,21 +1611,36 @@
             { title: "ইতিহাস ও ঐতিহ্য", slug: "hist" }
         ];
 
+        // HINT: প্রতিটি category row-তে কোন বই দেখাবেন সেটা slug ধরে এখানে key list দিয়ে দিন।
+        // Example: islam: ["paradoxical-sajid", "new-book-key", ...]
+        const CATEGORY_BOOK_KEYS = {
+            islam: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            novel: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            admission: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            kids: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            self: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            thriller: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            wb: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            en: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            story: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            freelance: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            sci: ["sample-1", "sample-2", "sample-3", "sample-4"],
+            hist: ["sample-1", "sample-2", "sample-3", "sample-4"]
+        };
+
         function populateCategoryRows() {
             const host = document.getElementById("category-rows");
             if (!host) return;
             host.innerHTML = CATEGORY_ROW_DEFS.map(function (def) {
                 const sid = def.sectionId ? def.sectionId : "cat-row-" + def.slug;
-                // HINT: প্রতিটি ক্যাটাগরির বই কার্ড বদলাতে buildMiniCard(...) লাইনে আপনার বই নাম/লেখক বসান।
+                const keys = CATEGORY_BOOK_KEYS[def.slug] || ["sample-1", "sample-2", "sample-3", "sample-4"];
+                const cards = resolveBooksFromKeys(keys).map(function (item) {
+                    return buildMiniCard(item);
+                }).join("");
                 return (
                     '<section class="browse-section" id="' + sid + '">' +
                     '<div class="browse-head"><h3>' + def.title + '</h3><a href="#books" class="view-all">View All →</a></div>' +
-                    '<div class="horizontal-scroll">' +
-                    buildMiniCard("নমুনা বই ১", "লেখক") +
-                    buildMiniCard("নমুনা বই ২", "লেখক") +
-                    buildMiniCard("নমুনা বই ৩", "লেখক") +
-                    buildMiniCard("নমুনা বই ৪", "লেখক") +
-                    "</div></section>"
+                    '<div class="horizontal-scroll">' + cards + "</div></section>"
                 );
             }).join("");
         }
