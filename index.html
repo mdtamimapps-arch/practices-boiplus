@@ -1022,32 +1022,7 @@
     <!-- HINT: Weekly row-তে বই যোগ করতে populateWeeklyRow() ফাংশনের items array-তে নতুন ["বই নাম","লেখক"] দিন -->
     <div class="product-card" data-search="প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী ঝংকার মাহবুব">
         <div class="product-img">
-            <img src="https://tse3.mm.bing.net/th/id/OIP.qOwJ95yiu4lt-HuMZ0s07QAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Book">
-        </div>
-        <div class="product-info">
-            <h4>প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী</h4>
-            <p class="author">ঝংকার মাহবুব</p>
-            <div class="price-box">
-                <span class="current-price">৳২৫০</span>
-            </div>
-            <button type="button" class="buy-btn">ঝুড়িতে রাখুন 🛒</button>
-        </div>
-    </div>
-                 <div class="product-card" data-search="প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী ঝংকার মাহবুব">
-        <div class="product-img">
-            <img src=" <div class="product-card" data-search="প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী ঝংকার মাহবুব">
-        <div class="product-img">
-            <img src="https://tse3.mm.bing.net/th/id/OIP.qOwJ95yiu4lt-HuMZ0s07QAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Book">
-        </div>
-        <div class="product-info">
-            <h4>প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী</h4>
-            <p class="author">ঝংকার মাহবুব</p>
-            <div class="price-box">
-                <span class="current-price">৳২৫০</span>
-            </div>
-            <button type="button" class="buy-btn">ঝুড়িতে রাখুন 🛒</button>
-        </div>
-    </div>" alt="Book">
+            <img src="https://scontent.fdac190-1.fna.fbcdn.net/v/t39.30808-6/612608679_122182720874381463_2758780002660335582_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=2a1932&_nc_eui2=AeGEKdmZu59w4k3a1_SI6tVaJzyOZyt8kXwnPI5nK3yRfPZAEwnmWl4BP6h5WhKi2ABZcY-zHE7vYlvwybeU6EVv&_nc_ohc=tDTmb9nTVl0Q7kNvwF7FvLa&_nc_oc=AdoDZUtQ9XSTqOdIIePbZz6fI936x7Q6rVwsgMl5WxVpVjucawnUnFDdaTrxtC1xJj8&_nc_zt=23&_nc_ht=scontent.fdac190-1.fna&_nc_gid=9w01qLXFAjrVJbx0nI7bBQ&_nc_ss=7a3a8&oh=00_Af1t4kQ_bemTWLWmP1x52AEk1NQgIV6hrtWWv7QH3aEiHQ&oe=69D5AC35" alt="Book">
         </div>
         <div class="product-info">
             <h4>প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী</h4>
@@ -1634,12 +1609,25 @@
             const oldPriceText = oldPrice > price ? '<span class="old">' + formatBDT(oldPrice) + "</span>" : "";
             return (
                 '<article class="product-card mini-book-card">' +
-                '<div class="mini-cover"><img src="' + cover + '" alt="' + title + '">' + discountTag + "</div>" +
+                '<div class="mini-cover"><img src="' + cover + '" alt="' + title + '" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=\'https://via.placeholder.com/320x420/1f1f1f/bdbdbd?text=Image+Not+Found\';">' + discountTag + "</div>" +
                 '<div class="mini-meta"><h4>' + title + '</h4><p>' + author + '</p><div class="mini-price"><span class="new">' + formatBDT(price) + "</span>" + oldPriceText + "</div></div>" +
                 "</article>"
             );
         }
 
+        // ===========================
+        // HINT (সবচেয়ে গুরুত্বপূর্ণ):
+        // নতুন বই ADD করতে শুধু BOOK_SOURCE এর ভিতরে নতুন key দিন:
+        // "atomic-habits": {
+        //   title: "Atomic Habits",
+        //   author: "James Clear",
+        //   price: 420,
+        //   oldPrice: 550,
+        //   image: "https://your-image-link.jpg"
+        // }
+        // তারপর WEEKLY_BOOK_KEYS অথবা CATEGORY_BOOK_KEYS এ সেই key বসান।
+        // image URL কাজ না করলে placeholder দেখাবে (onerror fallback add করা আছে)।
+        // ===========================
         // HINT: সব mini row (Weekly + Category) এর বই এক জায়গা থেকে edit করতে চাইলে নিচে title/author/price/oldPrice/image বদলান।
         const BOOK_SOURCE = {
             "paradoxical-sajid": {
@@ -1672,6 +1660,10 @@
         // HINT: Weekly row-তে বই দেখাতে নিচের key গুলো দিন (key অবশ্যই BOOK_SOURCE এ থাকতে হবে)।
         const WEEKLY_BOOK_KEYS = ["paradoxical-sajid", "himu-neelpoddo", "chouddogoshti"];
 
+        function getAutoBookKeys() {
+            return Object.keys(BOOK_SOURCE).filter(function (k) { return !k.startsWith("sample-"); });
+        }
+
         function resolveBooksFromKeys(keys) {
             return (keys || []).map(function (key) {
                 return BOOK_SOURCE[key];
@@ -1681,7 +1673,9 @@
         function populateWeeklyRow() {
             const row = document.getElementById("weekly-scroll");
             if (!row) return;
-            const books = resolveBooksFromKeys(WEEKLY_BOOK_KEYS);
+            // HINT: WEEKLY_BOOK_KEYS খালি থাকলে auto non-sample books দেখাবে।
+            const weeklyKeys = (WEEKLY_BOOK_KEYS && WEEKLY_BOOK_KEYS.length) ? WEEKLY_BOOK_KEYS : getAutoBookKeys();
+            const books = resolveBooksFromKeys(weeklyKeys);
             row.innerHTML = books.map(function (item) { return buildMiniCard(item); }).join("");
         }
 
@@ -1703,6 +1697,7 @@
 
         // HINT: প্রতিটি category row-তে কোন বই দেখাবেন সেটা slug ধরে এখানে key list দিয়ে দিন।
         // Example: islam: ["paradoxical-sajid", "new-book-key", ...]
+        // যদি কোনো slug এ list না দেন/খালি রাখেন, auto non-sample books দেখাবে।
         const CATEGORY_BOOK_KEYS = {
             islam: ["sample-1", "sample-2", "sample-3", "sample-4"],
             novel: ["sample-1", "sample-2", "sample-3", "sample-4"],
@@ -1721,9 +1716,11 @@
         function populateCategoryRows() {
             const host = document.getElementById("category-rows");
             if (!host) return;
+            const autoKeys = getAutoBookKeys();
             host.innerHTML = CATEGORY_ROW_DEFS.map(function (def) {
                 const sid = def.sectionId ? def.sectionId : "cat-row-" + def.slug;
-                const keys = CATEGORY_BOOK_KEYS[def.slug] || ["sample-1", "sample-2", "sample-3", "sample-4"];
+                const configured = CATEGORY_BOOK_KEYS[def.slug];
+                const keys = (configured && configured.length) ? configured : autoKeys;
                 const cards = resolveBooksFromKeys(keys).map(function (item) {
                     return buildMiniCard(item);
                 }).join("");
