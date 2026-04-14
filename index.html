@@ -378,6 +378,14 @@
             flex-wrap: wrap;
             gap: 8px;
         }
+        .weekly-sync-status {
+            margin-top: 8px;
+            font-size: 12px;
+            min-height: 18px;
+            color: #9e9e9e;
+        }
+        .weekly-sync-status.ok { color: #81c784; }
+        .weekly-sync-status.err { color: #ef9a9a; }
         .weekly-added-chip {
             display: inline-flex;
             align-items: center;
@@ -1121,7 +1129,7 @@
     </div>
 
     </div>
-            <div class="weekly-editor-panel" aria-label="Weekly বই যোগ করার বক্স">
+            <div id="weeklyEditorPanel" class="weekly-editor-panel" aria-label="Weekly বই যোগ করার বক্স" hidden>
                 <h4>Weekly বই যোগ করুন (Premium RGB Box)</h4>
                 <p>নিচের ফিল্ডে তথ্য দিন। Add চাপলে বইটি <strong style="color:#ffcc80;">বাম থেকে ডানে</strong> ধারাবাহিকভাবে Weekly row-তে যুক্ত হবে।</p>
                 <div id="weeklyLockMsg" class="notice-lock-msg">
@@ -1141,6 +1149,7 @@
                     </form>
                 </div>
                 <div id="weeklyAddedList" class="weekly-added-list"></div>
+                <div id="weeklySyncStatus" class="weekly-sync-status" aria-live="polite"></div>
             </div>
         </section>
 
@@ -1522,6 +1531,26 @@
             }
         }
 
+        let weeklySyncStatusTimer = null;
+        function showWeeklySyncStatus(message, type) {
+            const box = document.getElementById("weeklySyncStatus");
+            if (!box) return;
+            box.textContent = message || "";
+            box.classList.remove("ok", "err");
+            if (type === "ok") box.classList.add("ok");
+            if (type === "err") box.classList.add("err");
+            if (weeklySyncStatusTimer) {
+                clearTimeout(weeklySyncStatusTimer);
+                weeklySyncStatusTimer = null;
+            }
+            if (message) {
+                weeklySyncStatusTimer = setTimeout(function () {
+                    box.textContent = "";
+                    box.classList.remove("ok", "err");
+                }, 3000);
+            }
+        }
+
         async function restoreWeeklySession() {
             if (!weeklyAuthToken) return false;
             try {
@@ -1537,9 +1566,11 @@
         }
 
         function applyWeeklyEditorUI() {
+            const panel = document.getElementById("weeklyEditorPanel");
             const editorWrap = document.getElementById("weeklyEditorWrap");
             const lockMsg = document.getElementById("weeklyLockMsg");
             const canEdit = canEditWeeklyBooks();
+            if (panel) panel.hidden = !canEdit;
             if (editorWrap) editorWrap.hidden = !canEdit;
             if (lockMsg) lockMsg.hidden = canEdit;
         }
@@ -1935,7 +1966,9 @@
                 e.target.reset();
                 await populateWeeklyRow();
                 await renderWeeklyAddedList();
+                showWeeklySyncStatus("Code Sync Successful - Weekly বই code-এ save হয়েছে।", "ok");
             } catch (err) {
+                showWeeklySyncStatus("Code Sync Failed - server sync হয়নি।", "err");
                 alert((err && err.message) ? err.message : "বই যোগ করা যায়নি।");
             }
         }
@@ -1950,7 +1983,9 @@
                 await apiRequest("/weekly-books/" + encodeURIComponent(id), { method: "DELETE" });
                 await populateWeeklyRow();
                 await renderWeeklyAddedList();
+                showWeeklySyncStatus("Code Sync Successful - বই remove update code-এ save হয়েছে।", "ok");
             } catch (err) {
+                showWeeklySyncStatus("Code Sync Failed - remove sync হয়নি।", "err");
                 alert((err && err.message) ? err.message : "বই মুছা যায়নি।");
             }
         }
