@@ -2043,10 +2043,8 @@
                 return { synced: true };
             } catch (err) {
                 saveCustomCatalogDataToStorage(customCatalogData);
-                if (err && err.isNetworkError) {
-                    return { synced: false };
-                }
-                throw err;
+                const msg = (err && err.message) ? String(err.message) : "Server sync failed";
+                return { synced: false, message: msg };
             }
         }
 
@@ -2205,7 +2203,7 @@
                 populateCategoryRows();
                 await renderWeeklyAddedList();
                 if (saveState && saveState.synced === false) {
-                    showWeeklySyncStatus("Server offline - বই লোকালিভাবে save হয়েছে।", "err");
+                    showWeeklySyncStatus("Server sync হয়নি - বই লোকালিভাবে save হয়েছে।", "err");
                 } else {
                     showWeeklySyncStatus("Code Sync Successful - বই category সহ code-এ save হয়েছে।", "ok");
                 }
@@ -2239,7 +2237,7 @@
                 populateCategoryRows();
                 await renderWeeklyAddedList();
                 if (saveState && saveState.synced === false) {
-                    showWeeklySyncStatus("Server offline - remove লোকালিভাবে save হয়েছে।", "err");
+                    showWeeklySyncStatus("Server sync হয়নি - remove লোকালিভাবে save হয়েছে।", "err");
                 } else {
                     showWeeklySyncStatus("Code Sync Successful - mark করা বইগুলো remove হয়েছে।", "ok");
                 }
