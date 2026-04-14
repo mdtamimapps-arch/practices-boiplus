@@ -1701,17 +1701,7 @@
                 closeLogin();
                 currentAdminUser = userBox;
                 if (isWeeklyEditorUser(userBox)) {
-                    try {
-                        const authData = await apiRequest("/auth/login", {
-                            method: "POST",
-                            body: JSON.stringify({ username: userBox, password: passBox })
-                        });
-                        setWeeklyToken(authData.token || "");
-                    } catch (err) {
-                        setWeeklyToken("");
-                        alert((err && err.message) ? err.message : "Login failed");
-                        return;
-                    }
+                    setWeeklyToken("");
                     dashBoard.style.display = "none";
                     mainWeb.style.display = "block";
                     applyWeeklyEditorUI();
