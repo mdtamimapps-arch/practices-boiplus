@@ -1124,16 +1124,22 @@
             <div class="weekly-editor-panel" aria-label="Weekly বই যোগ করার বক্স">
                 <h4>Weekly বই যোগ করুন (Premium RGB Box)</h4>
                 <p>নিচের ফিল্ডে তথ্য দিন। Add চাপলে বইটি <strong style="color:#ffcc80;">বাম থেকে ডানে</strong> ধারাবাহিকভাবে Weekly row-তে যুক্ত হবে।</p>
-                <form id="weeklyBookForm">
-                    <div class="weekly-form-grid">
-                        <input id="weeklyBookTitle" type="text" placeholder="বইয়ের নাম (যেমন: তামীম)" required>
-                        <input id="weeklyBookAuthor" type="text" placeholder="লেখক (যেমন: তামীম)" required>
-                        <input id="weeklyBookPrice" type="number" min="1" placeholder="ফ্রী (৳)" required>
-                        <input id="weeklyBookOldPrice" type="number" min="0" placeholder="১০০০০ (৳)">
-                        <input id="weeklyBookImage" class="full" type="url" placeholder="https://rokbucket.rokomari.io/ProductNew20190903/130X186/Qurane_Adhunik_Biggan-Professor_Muhammod_Hamidur_Rahman-f5d2d-210240.jpg">
-                    </div>
-                    <button type="submit" class="weekly-add-btn">+ Weekly Row-তে যোগ করুন</button>
-                </form>
+                <div id="weeklyLockMsg" class="notice-lock-msg">
+                    👁 Weekly row সবাই <strong>দেখতে</strong> পারবে। বই <strong>শুধু Tamim</strong> যোগ/মুছতে পারবে।
+                    <button type="button" id="weeklyUnlockBtn" class="weekly-add-btn" style="margin-top:10px;">Tamim Unlock</button>
+                </div>
+                <div id="weeklyEditorWrap" hidden>
+                    <form id="weeklyBookForm">
+                        <div class="weekly-form-grid">
+                            <input id="weeklyBookTitle" type="text" placeholder="বইয়ের নাম (যেমন: তামীম)" required>
+                            <input id="weeklyBookAuthor" type="text" placeholder="লেখক (যেমন: তামীম)" required>
+                            <input id="weeklyBookPrice" type="number" min="1" placeholder="ফ্রী (৳)" required>
+                            <input id="weeklyBookOldPrice" type="number" min="0" placeholder="১০০০০ (৳)">
+                            <input id="weeklyBookImage" class="full" type="url" placeholder="https://rokbucket.rokomari.io/ProductNew20190903/130X186/Qurane_Adhunik_Biggan-Professor_Muhammod_Hamidur_Rahman-f5d2d-210240.jpg">
+                        </div>
+                        <button type="submit" class="weekly-add-btn">+ Weekly Row-তে যোগ করুন</button>
+                    </form>
+                </div>
                 <div id="weeklyAddedList" class="weekly-added-list"></div>
             </div>
         </section>
@@ -1401,7 +1407,9 @@
 
         /** সবাই ড্যাশবোর্ড দেখতে পারবে; নোটিশ এডিট শুধু এই ইউজার */
         const NOTICE_EDITOR_USER = "tamim";
+        const WEEKLY_EDITOR_USER = "tamim";
         let currentAdminUser = null;
+        let weeklyEditUnlocked = false;
 
         const modal = document.getElementById("loginModal");
         const mainWeb = document.getElementById("main-website");
@@ -1480,6 +1488,34 @@
 
         function canEditNotices() {
             return currentAdminUser === NOTICE_EDITOR_USER;
+        }
+
+        function canEditWeeklyBooks() {
+            return currentAdminUser === WEEKLY_EDITOR_USER || weeklyEditUnlocked;
+        }
+
+        function applyWeeklyEditorUI() {
+            const editorWrap = document.getElementById("weeklyEditorWrap");
+            const lockMsg = document.getElementById("weeklyLockMsg");
+            const unlockBtn = document.getElementById("weeklyUnlockBtn");
+            const canEdit = canEditWeeklyBooks();
+            if (editorWrap) editorWrap.hidden = !canEdit;
+            if (lockMsg) lockMsg.hidden = canEdit;
+            if (unlockBtn) unlockBtn.hidden = canEdit;
+        }
+
+        function unlockWeeklyEditor() {
+            const user = (window.prompt("Weekly add করতে username দিন:") || "").trim().toLowerCase();
+            const pass = (window.prompt("পাসওয়ার্ড দিন:") || "").trim();
+            if (user === WEEKLY_EDITOR_USER && adminData[user] === pass) {
+                weeklyEditUnlocked = true;
+                currentAdminUser = user;
+                applyWeeklyEditorUI();
+                renderWeeklyAddedList();
+                alert("Weekly editor unlock হয়েছে। এখন বই add/remove করতে পারবেন।");
+                return;
+            }
+            alert("ভুল credential. শুধু Tamim Weekly বই add করতে পারবে।");
         }
 
         function applyNoticeEditorUI() {
@@ -1593,7 +1629,9 @@
                 document.getElementById("logged-user").innerText = userBox.toUpperCase();
                 window.scrollTo(0, 0);
                 applyNoticeEditorUI();
+                applyWeeklyEditorUI();
                 renderNotices();
+                renderWeeklyAddedList();
             } else {
                 alert("ভুল নাম বা পাসওয়ার্ড! মামুর বেটা কি দিয়েছিস 😁😀");
             }
@@ -1601,8 +1639,11 @@
 
         function logout() {
             currentAdminUser = null;
+            weeklyEditUnlocked = false;
             dashBoard.style.display = "none";
             mainWeb.style.display = "block";
+            applyWeeklyEditorUI();
+            renderWeeklyAddedList();
             alert("লগ আউট সফল।");
             window.scrollTo(0, 0);
         }
@@ -1791,6 +1832,7 @@
             const listBox = document.getElementById("weeklyAddedList");
             if (!listBox) return;
             const items = loadWeeklyCustomBooks();
+            const editor = canEditWeeklyBooks();
             if (!items.length) {
                 listBox.innerHTML = "<span class='weekly-added-chip'>কোনো কাস্টম বই যোগ করা হয়নি</span>";
                 return;
@@ -1798,17 +1840,24 @@
             listBox.innerHTML = items.map(function (item) {
                 const title = escapeHtml(item.title || "বই");
                 const id = escapeHtml(item.id || "");
-                return '<span class="weekly-added-chip">' + title + ' <button type="button" data-weekly-del="' + id + '" aria-label="মুছুন">✕</button></span>';
+                const removeBtn = editor ? ' <button type="button" data-weekly-del="' + id + '" aria-label="মুছুন">✕</button>' : "";
+                return '<span class="weekly-added-chip">' + title + removeBtn + "</span>";
             }).join("");
-            listBox.querySelectorAll("[data-weekly-del]").forEach(function (btn) {
-                btn.addEventListener("click", function () {
-                    removeWeeklyCustomBook(this.getAttribute("data-weekly-del"));
+            if (editor) {
+                listBox.querySelectorAll("[data-weekly-del]").forEach(function (btn) {
+                    btn.addEventListener("click", function () {
+                        removeWeeklyCustomBook(this.getAttribute("data-weekly-del"));
+                    });
                 });
-            });
+            }
         }
 
         function addWeeklyCustomBook(e) {
             e.preventDefault();
+            if (!canEditWeeklyBooks()) {
+                alert("Weekly বই যোগ করার অনুমতি শুধু Tamim এর।");
+                return;
+            }
             const titleEl = document.getElementById("weeklyBookTitle");
             const authorEl = document.getElementById("weeklyBookAuthor");
             const priceEl = document.getElementById("weeklyBookPrice");
@@ -1842,6 +1891,10 @@
         }
 
         function removeWeeklyCustomBook(id) {
+            if (!canEditWeeklyBooks()) {
+                alert("Weekly বই মুছার অনুমতি শুধু Tamim এর।");
+                return;
+            }
             if (!id) return;
             const next = loadWeeklyCustomBooks().filter(function (item) {
                 return item.id !== id;
@@ -1929,11 +1982,16 @@
         renderCategoryCloud();
         populateWeeklyRow();
         populateCategoryRows();
+        applyWeeklyEditorUI();
         renderWeeklyAddedList();
 
         const weeklyBookForm = document.getElementById("weeklyBookForm");
         if (weeklyBookForm) {
             weeklyBookForm.addEventListener("submit", addWeeklyCustomBook);
+        }
+        const weeklyUnlockBtn = document.getElementById("weeklyUnlockBtn");
+        if (weeklyUnlockBtn) {
+            weeklyUnlockBtn.addEventListener("click", unlockWeeklyEditor);
         }
 
         (function initScrollFab() {
