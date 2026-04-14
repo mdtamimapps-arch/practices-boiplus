@@ -1161,6 +1161,7 @@
                     </form>
                 </div>
                 <div id="weeklyAddedList" class="weekly-added-list"></div>
+                <div id="weeklySelectedCount" class="weekly-sync-status"></div>
                 <button type="button" id="weeklyRemoveSelectedBtn" class="weekly-add-btn" style="margin-top:8px;" hidden>✓ Mark করা বইগুলো Remove করুন</button>
                 <div id="weeklySyncStatus" class="weekly-sync-status" aria-live="polite"></div>
             </div>
@@ -1419,7 +1420,6 @@
         const VIEW_MODE_KEY = "boiPlusViewMode";
         const API_BASE_URL = "http://localhost:3000/api";
         const WEEKLY_TOKEN_STORAGE_KEY = "boiPlusWeeklyEditorToken";
-        const WEEKLY_LOCAL_EDITOR_KEY = "boiPlusWeeklyLocalEditor";
         const DEFAULT_NOTICES = [
             { id: "def-1", title: "মিটিং", body: "মিটিং রাত ৯ টায়।", isDefault: true },
             { id: "def-2", title: "চাঁদা", body: "সাপ্তাহিক চাঁদা জমা দিন।", isDefault: true },
@@ -1579,11 +1579,8 @@
         }
 
         async function restoreWeeklySession() {
-            const savedEditor = (localStorage.getItem(WEEKLY_LOCAL_EDITOR_KEY) || "").trim().toLowerCase();
-            if (isWeeklyEditorUser(savedEditor)) {
-                currentAdminUser = savedEditor;
-                return true;
-            }
+            currentAdminUser = null;
+            setWeeklyToken("");
             return false;
         }
 
@@ -1715,7 +1712,6 @@
                         alert((err && err.message) ? err.message : "Login failed");
                         return;
                     }
-                    localStorage.setItem(WEEKLY_LOCAL_EDITOR_KEY, userBox);
                     dashBoard.style.display = "none";
                     mainWeb.style.display = "block";
                     applyWeeklyEditorUI();
@@ -1744,7 +1740,6 @@
         function logout() {
             currentAdminUser = null;
             setWeeklyToken("");
-            localStorage.removeItem(WEEKLY_LOCAL_EDITOR_KEY);
             dashBoard.style.display = "none";
             mainWeb.style.display = "block";
             applyWeeklyEditorUI();
@@ -2049,12 +2044,14 @@
         async function renderWeeklyAddedList() {
             const listBox = document.getElementById("weeklyAddedList");
             const removeBtn = document.getElementById("weeklyRemoveSelectedBtn");
+            const countBox = document.getElementById("weeklySelectedCount");
             if (!listBox) return;
             const editor = canEditWeeklyBooks();
             const grouped = getAllCustomBooksGroupedById();
             if (!grouped.length) {
                 listBox.innerHTML = "<span class='weekly-added-chip'>কোনো কাস্টম বই যোগ করা হয়নি</span>";
                 if (removeBtn) removeBtn.hidden = true;
+                if (countBox) countBox.textContent = "";
                 return;
             }
             listBox.innerHTML = grouped.map(function (entry) {
@@ -2065,6 +2062,21 @@
                 return '<label class="weekly-added-chip">' + mark + " " + title + " <small>(" + targetText + ")</small></label>";
             }).join("");
             if (removeBtn) removeBtn.hidden = !editor;
+            if (editor) {
+                listBox.querySelectorAll("[data-weekly-mark]").forEach(function (cb) {
+                    cb.addEventListener("change", updateWeeklySelectionCount);
+                });
+            }
+            updateWeeklySelectionCount();
+        }
+
+        function updateWeeklySelectionCount() {
+            const countBox = document.getElementById("weeklySelectedCount");
+            if (!countBox) return;
+            const selected = document.querySelectorAll("[data-weekly-mark]:checked").length;
+            countBox.textContent = selected > 0
+                ? "Selected: " + selected + " বই"
+                : "Selected: 0 বই";
         }
 
         function ensureCategoryDef(slug, title) {
