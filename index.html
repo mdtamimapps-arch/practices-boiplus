@@ -1417,6 +1417,7 @@
 
     <script>
         const NOTICE_STORAGE_KEY = "boiPlusInternalNotices";
+        const CUSTOM_CATALOG_STORAGE_KEY = "boiPlusCustomCatalogData";
         const VIEW_MODE_KEY = "boiPlusViewMode";
         const API_BASE_URL = "http://localhost:3000/api";
         const WEEKLY_TOKEN_STORAGE_KEY = "boiPlusWeeklyEditorToken";
@@ -1528,18 +1529,44 @@
             return isWeeklyEditorUser(currentAdminUser);
         }
 
+        function getApiBaseCandidates() {
+            const list = [];
+            const host = (window.location && window.location.hostname) ? window.location.hostname : "";
+            const protocol = (window.location && window.location.protocol) ? window.location.protocol : "";
+            const push = function (url) {
+                if (!url || list.includes(url)) return;
+                list.push(url);
+            };
+            push(API_BASE_URL);
+            push("http://127.0.0.1:3000/api");
+            if (host && host !== "localhost" && host !== "127.0.0.1" && protocol !== "file:") {
+                push(window.location.protocol + "//" + host + ":3000/api");
+            }
+            return list;
+        }
+
         async function apiRequest(path, options) {
             const opts = options || {};
             const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
             if (weeklyAuthToken) {
                 headers.Authorization = "Bearer " + weeklyAuthToken;
             }
-            let res;
-            try {
-                res = await fetch(API_BASE_URL + path, Object.assign({}, opts, { headers: headers }));
-            } catch (err) {
+            let res = null;
+            let lastErr = null;
+            const bases = getApiBaseCandidates();
+            for (let i = 0; i < bases.length; i++) {
+                const base = bases[i];
+                try {
+                    res = await fetch(base + path, Object.assign({}, opts, { headers: headers }));
+                    break;
+                } catch (err) {
+                    lastErr = err;
+                }
+            }
+            if (!res) {
                 const netErr = new Error("Network problem: server response পাওয়া যায়নি।");
                 netErr.isNetworkError = true;
+                netErr.originalError = lastErr || null;
                 throw netErr;
             }
             const data = await res.json().catch(function () { return {}; });
@@ -1962,6 +1989,20 @@
             return { weeklyBooks, categoryDefs, categoryCustomBooks };
         }
 
+        function loadCustomCatalogDataFromStorage() {
+            try {
+                const raw = localStorage.getItem(CUSTOM_CATALOG_STORAGE_KEY);
+                if (!raw) return {};
+                return JSON.parse(raw);
+            } catch {
+                return {};
+            }
+        }
+
+        function saveCustomCatalogDataToStorage(data) {
+            localStorage.setItem(CUSTOM_CATALOG_STORAGE_KEY, JSON.stringify(data || {}));
+        }
+
         function getCombinedCategoryDefs() {
             const seen = new Set();
             const rows = [];
@@ -1985,17 +2026,28 @@
             try {
                 const data = await apiRequest("/custom-data");
                 customCatalogData = normalizeCustomCatalogData(data);
+                saveCustomCatalogDataToStorage(customCatalogData);
             } catch {
-                customCatalogData = normalizeCustomCatalogData({});
+                customCatalogData = normalizeCustomCatalogData(loadCustomCatalogDataFromStorage());
             }
             return customCatalogData;
         }
 
         async function saveCustomCatalogData() {
-            await apiRequest("/custom-data", {
-                method: "PUT",
-                body: JSON.stringify(customCatalogData)
-            });
+            try {
+                await apiRequest("/custom-data", {
+                    method: "PUT",
+                    body: JSON.stringify(customCatalogData)
+                });
+                saveCustomCatalogDataToStorage(customCatalogData);
+                return { synced: true };
+            } catch (err) {
+                saveCustomCatalogDataToStorage(customCatalogData);
+                if (err && err.isNetworkError) {
+                    return { synced: false };
+                }
+                throw err;
+            }
         }
 
         function refreshCategoryTargetOptions() {
@@ -2146,13 +2198,17 @@
             };
             try {
                 addBookToTargets(newBook, targetValue, newCategoryName);
-                await saveCustomCatalogData();
+                const saveState = await saveCustomCatalogData();
                 e.target.reset();
                 refreshCategoryTargetOptions();
                 await populateWeeklyRow();
                 populateCategoryRows();
                 await renderWeeklyAddedList();
-                showWeeklySyncStatus("Code Sync Successful - বই category সহ code-এ save হয়েছে।", "ok");
+                if (saveState && saveState.synced === false) {
+                    showWeeklySyncStatus("Server offline - বই লোকালিভাবে save হয়েছে।", "err");
+                } else {
+                    showWeeklySyncStatus("Code Sync Successful - বই category সহ code-এ save হয়েছে।", "ok");
+                }
             } catch (err) {
                 showWeeklySyncStatus("Code Sync Failed - server sync হয়নি।", "err");
                 alert((err && err.message) ? err.message : "বই যোগ করা যায়নি।");
@@ -2178,11 +2234,15 @@
                 });
             });
             try {
-                await saveCustomCatalogData();
+                const saveState = await saveCustomCatalogData();
                 await populateWeeklyRow();
                 populateCategoryRows();
                 await renderWeeklyAddedList();
-                showWeeklySyncStatus("Code Sync Successful - mark করা বইগুলো remove হয়েছে।", "ok");
+                if (saveState && saveState.synced === false) {
+                    showWeeklySyncStatus("Server offline - remove লোকালিভাবে save হয়েছে।", "err");
+                } else {
+                    showWeeklySyncStatus("Code Sync Successful - mark করা বইগুলো remove হয়েছে।", "ok");
+                }
             } catch (err) {
                 showWeeklySyncStatus("Code Sync Failed - remove sync হয়নি।", "err");
                 alert((err && err.message) ? err.message : "বই remove করা যায়নি।");
