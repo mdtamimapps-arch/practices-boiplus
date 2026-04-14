@@ -1043,6 +1043,9 @@
             <form onsubmit="handleLogin(event)">
                 <input type="text" id="username" class="login-input" placeholder="জানোনা 😶‍🌫️মনু😏 ( তামীম নিশ্চয়ই বলে দিছে😯😯)" required>
                 <input type="password" id="password" class="login-input" placeholder="সেইম কথা" required>
+                <label style="display:flex;align-items:center;gap:8px;color:#bbb;font-size:13px;margin:4px 0 10px;">
+                    <input type="checkbox" id="togglePasswordView"> Show Password
+                </label>
                 <button type="submit" class="login-submit">প্রবেশ করুন</button>
             </form>
         </div>
@@ -1406,6 +1409,7 @@
         const VIEW_MODE_KEY = "boiPlusViewMode";
         const API_BASE_URL = "http://localhost:3000/api";
         const WEEKLY_TOKEN_STORAGE_KEY = "boiPlusWeeklyEditorToken";
+        const WEEKLY_LOCAL_EDITOR_KEY = "boiPlusWeeklyLocalEditor";
         const DEFAULT_NOTICES = [
             { id: "def-1", title: "মিটিং", body: "মিটিং রাত ৯ টায়।", isDefault: true },
             { id: "def-2", title: "চাঁদা", body: "সাপ্তাহিক চাঁদা জমা দিন।", isDefault: true },
@@ -1511,7 +1515,7 @@
         }
 
         function canEditWeeklyBooks() {
-            return isWeeklyEditorUser(currentAdminUser) && !!weeklyAuthToken;
+            return isWeeklyEditorUser(currentAdminUser);
         }
 
         async function apiRequest(path, options) {
@@ -1524,7 +1528,7 @@
             try {
                 res = await fetch(API_BASE_URL + path, Object.assign({}, opts, { headers: headers }));
             } catch (err) {
-                const netErr = new Error("Server সংযোগ পাওয়া যায়নি। আগে backend চালু করুন: npm start");
+                const netErr = new Error("Network problem: server response পাওয়া যায়নি।");
                 netErr.isNetworkError = true;
                 throw netErr;
             }
@@ -1565,15 +1569,10 @@
         }
 
         async function restoreWeeklySession() {
-            if (!weeklyAuthToken) return false;
-            try {
-                const me = await apiRequest("/auth/me");
-                if (me && isWeeklyEditorUser(me.username)) {
-                    currentAdminUser = String(me.username || "").trim().toLowerCase();
-                    return true;
-                }
-            } catch {
-                setWeeklyToken("");
+            const savedEditor = (localStorage.getItem(WEEKLY_LOCAL_EDITOR_KEY) || "").trim().toLowerCase();
+            if (isWeeklyEditorUser(savedEditor)) {
+                currentAdminUser = savedEditor;
+                return true;
             }
             return false;
         }
@@ -1695,17 +1694,7 @@
                 closeLogin();
                 currentAdminUser = userBox;
                 if (isWeeklyEditorUser(userBox)) {
-                    try {
-                        const authData = await apiRequest("/auth/login", {
-                            method: "POST",
-                            body: JSON.stringify({ username: userBox, password: passBox })
-                        });
-                        setWeeklyToken(authData.token || "");
-                    } catch (err) {
-                        setWeeklyToken("");
-                        alert((err && err.message) ? err.message : "লগইন ব্যর্থ। backend চালু আছে কিনা দেখুন (npm start)");
-                        return;
-                    }
+                    localStorage.setItem(WEEKLY_LOCAL_EDITOR_KEY, userBox);
                     dashBoard.style.display = "none";
                     mainWeb.style.display = "block";
                     applyWeeklyEditorUI();
@@ -1731,12 +1720,22 @@
         function logout() {
             currentAdminUser = null;
             setWeeklyToken("");
+            localStorage.removeItem(WEEKLY_LOCAL_EDITOR_KEY);
             dashBoard.style.display = "none";
             mainWeb.style.display = "block";
             applyWeeklyEditorUI();
             renderWeeklyAddedList();
             alert("লগ আউট সফল।");
             window.scrollTo(0, 0);
+        }
+
+        const togglePasswordView = document.getElementById("togglePasswordView");
+        if (togglePasswordView) {
+            togglePasswordView.addEventListener("change", function () {
+                const passInput = document.getElementById("password");
+                if (!passInput) return;
+                passInput.type = this.checked ? "text" : "password";
+            });
         }
 
         window.onclick = function (event) { if (event.target === modal) closeLogin(); };
