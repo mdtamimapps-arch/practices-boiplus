@@ -1117,7 +1117,7 @@
         <section class="browse-section" id="weekly-ebook">
             <div class="browse-head">
                 <h3>Weekly Best Seller — ই-বুক</h3>
-                <a href="#books" class="view-all">View All →</a>
+                <a href="#weekly-ebook" class="view-all">View All →</a>
             </div>
             <div class="horizontal-scroll" id="weekly-scroll">
     <!-- HINT: Weekly row-তে বই যোগ করতে populateWeeklyRow() ফাংশনের items array-তে নতুন ["বই নাম","লেখক"] দিন -->
@@ -1611,6 +1611,38 @@
 
         async function restoreWeeklySession() {
             currentAdminUser = null;
+            const savedToken = localStorage.getItem(WEEKLY_TOKEN_STORAGE_KEY) || "";
+            if (!savedToken) {
+                setWeeklyToken("");
+                return false;
+            }
+            weeklyAuthToken = savedToken;
+            try {
+                const me = await apiRequest("/auth/me");
+                if (me && isWeeklyEditorUser(me.username)) {
+                    currentAdminUser = String(me.username || "").toLowerCase();
+                    return true;
+                }
+            } catch {
+                // Token যাচাই ব্যর্থ হলে fresh login লাগবে।
+            }
+            setWeeklyToken("");
+            return false;
+        }
+
+        async function loginWeeklyApi(username, password) {
+            try {
+                const data = await apiRequest("/auth/login", {
+                    method: "POST",
+                    body: JSON.stringify({ username: username, password: password })
+                });
+                if (data && data.token) {
+                    setWeeklyToken(data.token);
+                    return true;
+                }
+            } catch {
+                // লোকাল fallback থাকায় এখানে hard fail দরকার নেই।
+            }
             setWeeklyToken("");
             return false;
         }
@@ -1755,6 +1787,7 @@
                 renderNotices();
                 applyWeeklyEditorUI();
                 if (isWeeklyEditorUser(userBox)) {
+                    await loginWeeklyApi(userBox, passBox);
                     loadCustomCatalogData().then(function () {
                         refreshCategoryTargetOptions();
                         return populateWeeklyRow();
@@ -2291,7 +2324,7 @@
                 }).join("");
                 return (
                     '<section class="browse-section" id="' + sid + '">' +
-                    '<div class="browse-head"><h3>' + def.title + '</h3><a href="#books" class="view-all">View All →</a></div>' +
+                    '<div class="browse-head"><h3>' + def.title + '</h3><a href="#' + sid + '" class="view-all">View All →</a></div>' +
                     '<div class="horizontal-scroll">' + cards + "</div></section>"
                 );
             }).join("");
