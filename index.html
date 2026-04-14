@@ -1514,7 +1514,14 @@
             if (weeklyAuthToken) {
                 headers.Authorization = "Bearer " + weeklyAuthToken;
             }
-            const res = await fetch(API_BASE_URL + path, Object.assign({}, opts, { headers: headers }));
+            let res;
+            try {
+                res = await fetch(API_BASE_URL + path, Object.assign({}, opts, { headers: headers }));
+            } catch (err) {
+                const netErr = new Error("Server সংযোগ পাওয়া যায়নি। আগে backend চালু করুন: npm start");
+                netErr.isNetworkError = true;
+                throw netErr;
+            }
             const data = await res.json().catch(function () { return {}; });
             if (!res.ok) {
                 throw new Error(data.error || "Server request failed");
@@ -1690,7 +1697,7 @@
                         setWeeklyToken(authData.token || "");
                     } catch (err) {
                         setWeeklyToken("");
-                        alert((err && err.message) ? err.message : "Weekly editor login failed");
+                        alert((err && err.message) ? err.message : "লগইন ব্যর্থ। backend চালু আছে কিনা দেখুন (npm start)");
                         return;
                     }
                     dashBoard.style.display = "none";
@@ -1969,7 +1976,7 @@
                 showWeeklySyncStatus("Code Sync Successful - Weekly বই code-এ save হয়েছে।", "ok");
             } catch (err) {
                 showWeeklySyncStatus("Code Sync Failed - server sync হয়নি।", "err");
-                alert((err && err.message) ? err.message : "বই যোগ করা যায়নি।");
+                alert((err && err.message) ? err.message : "বই যোগ করা যায়নি। backend চালু করুন (npm start)");
             }
         }
 
@@ -1986,7 +1993,7 @@
                 showWeeklySyncStatus("Code Sync Successful - বই remove update code-এ save হয়েছে।", "ok");
             } catch (err) {
                 showWeeklySyncStatus("Code Sync Failed - remove sync হয়নি।", "err");
-                alert((err && err.message) ? err.message : "বই মুছা যায়নি।");
+                alert((err && err.message) ? err.message : "বই মুছা যায়নি। backend চালু করুন (npm start)");
             }
         }
 
