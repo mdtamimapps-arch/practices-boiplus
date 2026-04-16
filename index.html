@@ -237,81 +237,158 @@
         }
         .horizontal-scroll .product-card { min-width: 200px; flex-shrink: 0; scroll-snap-align: start; }
         .mini-book-card {
-            min-width: 180px !important;
-            border-radius: 14px;
-            border: 1px solid rgba(106, 120, 255, 0.45);
+            min-width: 220px !important;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             background:
-                linear-gradient(145deg, rgba(18, 18, 18, 0.95), rgba(28, 28, 28, 0.95)),
-                linear-gradient(125deg, rgba(255, 94, 98, 0.14), rgba(94, 114, 255, 0.18), rgba(59, 224, 195, 0.15));
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+                linear-gradient(135deg, rgba(48, 92, 255, 0.16), rgba(255, 0, 221, 0.16)),
+                linear-gradient(180deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.96));
+            box-shadow: 0 18px 32px rgba(0, 0, 0, 0.28);
             transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
             overflow: hidden;
+            position: relative;
         }
         .mini-book-card:hover {
-            transform: translateY(-7px);
-            border-color: rgba(59, 224, 195, 0.75);
-            box-shadow: 0 12px 28px rgba(94, 114, 255, 0.28);
+            transform: translateY(-6px);
+            border-color: rgba(255, 255, 255, 0.45);
+            box-shadow: 0 16px 32px rgba(113, 96, 255, 0.32);
         }
         .mini-book-card .mini-cover {
-            height: 145px;
-            position: relative;
+            padding: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
             overflow: hidden;
-            border-bottom: 1px solid rgba(120, 120, 120, 0.26);
         }
         .mini-book-card .mini-cover img {
+            border-radius: 18px;
             width: 100%;
-            height: 100%;
+            height: 240px;
             object-fit: cover;
             display: block;
             transition: transform 0.35s ease;
         }
         .mini-book-card:hover .mini-cover img {
-            transform: scale(1.06);
+            transform: scale(1.05);
         }
         .mini-book-card .mini-discount {
             position: absolute;
-            top: 8px;
-            left: 8px;
+            top: 14px;
+            left: 14px;
             background: rgba(255, 152, 0, 0.95);
             color: #121212;
             font-size: 11px;
             font-weight: 700;
             border-radius: 999px;
-            padding: 3px 8px;
+            padding: 4px 9px;
             box-shadow: 0 3px 10px rgba(255, 152, 0, 0.35);
         }
         .mini-book-card .mini-meta {
-            padding: 11px 12px 13px;
+            padding: 16px 14px 16px;
             text-align: left;
         }
         .mini-book-card .mini-meta h4 {
-            font-size: 14px;
-            color: #f8f8f8;
-            margin-bottom: 4px;
+            font-size: 1rem;
+            color: #ffffff;
+            margin-bottom: 6px;
             line-height: 1.35;
         }
         .mini-book-card .mini-meta p {
             margin: 0;
-            color: #9f9f9f;
-            font-size: 12px;
-            line-height: 1.35;
+            color: #d1d1ff;
+            font-size: 0.85rem;
+            line-height: 1.45;
+            margin-bottom: 10px;
         }
         .mini-book-card .mini-price {
-            margin-top: 9px;
+            margin-top: 10px;
             display: flex;
             align-items: baseline;
-            gap: 7px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         .mini-book-card .mini-price .new {
-            color: #ffb74d;
-            font-size: 15px;
-            font-weight: 700;
+            color: #ffeb3b;
+            font-size: 1rem;
+            font-weight: 800;
         }
         .mini-book-card .mini-price .old {
-            color: #7f7f7f;
-            font-size: 12px;
+            color: #b0b0b0;
+            font-size: 0.9rem;
             text-decoration: line-through;
+        }
+        .mini-book-card .mini-discount-label {
+            color: #76ff94;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-left: auto;
+        }
+        .mini-book-card .mini-remove-btn {
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 72, 66, 0.18);
+            color: #ff8a80;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .mini-book-card .mini-remove-btn:hover {
+            background: rgba(255, 72, 66, 0.32);
+            color: #ffffff;
+        }
+        .weekly-scroll-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        .weekly-scroll-wrap .scroll-btn {
+            flex: 0 0 40px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .weekly-scroll-wrap .scroll-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+        #weekly-scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 12px;
+            display: flex;
+            gap: 16px;
+            scroll-behavior: smooth;
+            width: 100%;
+        }
+        #weekly-scroll::-webkit-scrollbar {
+            height: 10px;
+        }
+        #weekly-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 999px;
+        }
+        #weekly-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .weekly-empty-message {
+            color: #c8c8ff;
+            font-size: 0.96rem;
+            padding: 28px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            width: 100%;
+            text-align: center;
         }
         .weekly-editor-panel {
             margin-top: 18px;
@@ -1119,52 +1196,10 @@
                 <h3>Weekly Best Seller — ই-বুক</h3>
                 <a href="#weekly-ebook" class="view-all">View All →</a>
             </div>
-            <div class="horizontal-scroll" id="weekly-scroll">
-    <!-- HINT: Weekly row-তে বই যোগ করতে populateWeeklyRow() ফাংশনের items array-তে নতুন ["বই নাম","লেখক"] দিন -->
-    <div class="product-card" data-search="প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী ঝংকার মাহবুব">
-        <div class="product-img">
-            <img src="https://scontent.fdac190-1.fna.fbcdn.net/v/t39.30808-6/612608679_122182720874381463_2758780002660335582_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=2a1932&_nc_eui2=AeGEKdmZu59w4k3a1_SI6tVaJzyOZyt8kXwnPI5nK3yRfPZAEwnmWl4BP6h5WhKi2ABZcY-zHE7vYlvwybeU6EVv&_nc_ohc=tDTmb9nTVl0Q7kNvwF7FvLa&_nc_oc=AdoDZUtQ9XSTqOdIIePbZz6fI936x7Q6rVwsgMl5WxVpVjucawnUnFDdaTrxtC1xJj8&_nc_zt=23&_nc_ht=scontent.fdac190-1.fna&_nc_gid=9w01qLXFAjrVJbx0nI7bBQ&_nc_ss=7a3a8&oh=00_Af1t4kQ_bemTWLWmP1x52AEk1NQgIV6hrtWWv7QH3aEiHQ&oe=69D5AC35" alt="Book">
-        </div>
-        <div class="product-info">
-            <h4>প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী</h4>
-            <p class="author">ঝংকার মাহবুব</p>
-            <div class="price-box">
-                <span class="current-price">৳২৫০</span>
-            </div>
-            <button type="button" class="buy-btn">ঝুড়িতে রাখুন 🛒</button>
-        </div>
-    </div>
-
-    </div>
-            <div id="weeklyEditorPanel" class="weekly-editor-panel" aria-label="Weekly বই যোগ করার বক্স" hidden>
-                <h4>Weekly বই যোগ করুন (Premium RGB Box)</h4>
-                <p>নিচের ফিল্ডে তথ্য দিন। Add চাপলে বইটি <strong style="color:#ffcc80;">বাম থেকে ডানে</strong> ধারাবাহিকভাবে Weekly row-তে যুক্ত হবে।</p>
-                <div id="weeklyLockMsg" class="notice-lock-msg">
-                    👁 Weekly row সবাই <strong>দেখতে</strong> পারবে। বই <strong>শুধু Tamim</strong> যোগ/মুছতে পারবে।
-                    Weekly add/remove করতে উপরের <strong>লগইন (Admin)</strong> দিয়ে Tamim account-এ login করুন।
-                </div>
-                <div id="weeklyEditorWrap" hidden>
-                    <form id="weeklyBookForm">
-                        <div class="weekly-form-grid">
-                            <input id="weeklyBookTitle" type="text" placeholder="বইয়ের নাম (যেমন: তামীম)" required>
-                            <input id="weeklyBookAuthor" type="text" placeholder="লেখক (যেমন: তামীম)" required>
-                            <input id="weeklyBookPrice" type="number" min="1" placeholder="ফ্রী (৳)" required>
-                            <input id="weeklyBookOldPrice" type="number" min="0" placeholder="১০০০০ (৳)">
-                            <select id="weeklyCategoryTarget" class="full" required>
-                                <option value="weekly">Weekly row</option>
-                                <option value="all-categories">সব category</option>
-                                <option value="new-category">+ নতুন category তৈরি</option>
-                            </select>
-                            <input id="weeklyNewCategoryName" class="full" type="text" placeholder="নতুন category নাম লিখুন" hidden>
-                            <input id="weeklyBookImage" class="full" type="url" placeholder="https://rokbucket.rokomari.io/ProductNew20190903/130X186/Qurane_Adhunik_Biggan-Professor_Muhammod_Hamidur_Rahman-f5d2d-210240.jpg">
-                        </div>
-                        <button type="submit" class="weekly-add-btn">+ Weekly Row-তে যোগ করুন</button>
-                    </form>
-                </div>
-                <div id="weeklyAddedList" class="weekly-added-list"></div>
-                <div id="weeklySelectedCount" class="weekly-sync-status"></div>
-                <button type="button" id="weeklyRemoveSelectedBtn" class="weekly-add-btn" style="margin-top:8px;" hidden>✓ Mark করা বইগুলো Remove করুন</button>
-                <div id="weeklySyncStatus" class="weekly-sync-status" aria-live="polite"></div>
+            <div class="weekly-scroll-wrap">
+                <button type="button" class="scroll-btn weekly-scroll-left" aria-label="Scroll left">‹</button>
+                <div class="horizontal-scroll" id="weekly-scroll"></div>
+                <button type="button" class="scroll-btn weekly-scroll-right" aria-label="Scroll right">›</button>
             </div>
         </section>
 
@@ -1530,7 +1565,7 @@
         }
 
         function canEditWeeklyBooks() {
-            return isWeeklyEditorUser(currentAdminUser);
+            return true; // Weekly বই add/remove সব ব্যবহারকারীর জন্য খোলা থাকুক
         }
 
         function getApiBaseCandidates() {
@@ -1873,7 +1908,7 @@
         });
 
         const BOOK_CATEGORIES = [
-            "কৃষি ও কৃষক", "ড্রয়িং, পেইন্টিং ডিজাইন ও ফটোগ্রাফি", "বাংলাদেশ", "জীবনী, স্মৃতিচারণ ও সাক্ষাৎকার",
+            "ইসলামি বই", "কৃষি ও কৃষক", "ড্রয়িং, পেইন্টিং ডিজাইন ও ফটোগ্রাফি", "বাংলাদেশ", "জীবনী, স্মৃতিচারণ ও সাক্ষাৎকার",
             "ব্যবসা, বিনিয়োগ ও অর্থনীতি", "শিশু-কিশোর বই", "রচনাসমগ্র/সংকলন", "কমিকস, নকশা ও ছবির গল্প",
             "কম্পিউটার, ইন্টারনেট, ফ্রিল্যান্সিং ও আউটসোর্সিং", "রান্নাবান্না, খাদ্য ও পুষ্টি", "ফ্যাশন ও রূপচর্চা",
             "স্বাস্থ্য, পরিচর্যা ও রোগ নিরাময়", "ইতিহাস ও ঐতিহ্য", "ব্যঙ্গ ও রম্যরচনা", "প্রফেশনাল, জার্নাল ও রেফারেন্স",
@@ -1883,7 +1918,7 @@
             "বেস্ট সেলার বুকস", "ম্যাগাজিন", "বই প্লাস কালেকশন", "গল্প", "উপন্যাস", "বিদেশি ভাষার বই", "রাজনীতি",
             "সমাজ, সভ্যতা ও সংস্কৃতি", "পশ্চিমবঙ্গের বই", "ছড়া, কবিতা ও আবৃত্তি", "রহস্য, গোয়েন্দা, ভৌতিক, থ্রিলার ও অ্যাডভেঞ্চার",
             "প্রাণী ও জীবজগৎ", "সায়েন্স ফিকশন", "ভর্তি, নিয়োগ ও প্রস্তুতি পরীক্ষা", "একাডেমিক", "ইউনিভার্সিটি",
-            "ইসলামি বই", "ইংরেজি ভাষার বই", "ই-বুক", "অতিরিক্ত ছাড়ের বই", "বইমেলা ২০২৬", "প্রি অর্ডার",
+            "ইংরেজি ভাষার বই", "ই-বুক", "অতিরিক্ত ছাড়ের বই", "বইমেলা ২০২৬", "প্রি অর্ডার",
             "كتب اللغة العربية والأردية", "অলিম্পিয়াড", "অফার", "প্যারালাল টেক্সট", "ভর্তি প্রস্তুতি",
             "ফ্রিল্যান্সিং ও আউটসোর্সিং", "বিজ্ঞান ও প্রযুক্তি", "বিনিয়োগ ও অর্থনীতি", "পরিচর্যা ও রোগ নিরাময়",
             "রহস্য ও অ্যাডভেঞ্চার", "আত্ম-উন্নয়ন ও মেডিটেশন", "শিশু-কিশোর বই", "নাটকের বই", "পরিবার ও প্যারেন্টিং",
@@ -1927,10 +1962,12 @@
             const cover = item && item.image ? item.image : "https://via.placeholder.com/320x420/1f1f1f/9e9e9e?text=Book+Cover";
             const discountTag = discount > 0 ? '<span class="mini-discount">-' + discount + "%</span>" : "";
             const oldPriceText = oldPrice > price ? '<span class="old">' + formatBDT(oldPrice) + "</span>" : "";
+            const discountLabel = discount > 0 ? '<span class="mini-discount-label">-' + discount + "% ছাড়</span>" : "";
+            const removable = item && item.customWeekly && item.id ? '<button type="button" class="mini-remove-btn" onclick="removeCustomWeeklyBook(\'' + String(item.id).replace(/'/g, "\\'") + '\')">মুছুন</button>' : "";
             return (
                 '<article class="product-card mini-book-card">' +
                 '<div class="mini-cover"><img src="' + cover + '" alt="' + title + '" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=\'https://via.placeholder.com/320x420/1f1f1f/bdbdbd?text=Image+Not+Found\';">' + discountTag + "</div>" +
-                '<div class="mini-meta"><h4>' + title + '</h4><p>' + author + '</p><div class="mini-price"><span class="new">' + formatBDT(price) + "</span>" + oldPriceText + "</div></div>" +
+                '<div class="mini-meta"><h4>' + title + '</h4><p>' + author + '</p><div class="mini-price"><span class="new">' + formatBDT(price) + "</span>" + oldPriceText + discountLabel + "</div>" + removable + "</div>" +
                 "</article>"
             );
         }
@@ -1984,13 +2021,6 @@
             "sample-3": { title: "নমুনা বই ৩", author: "লেখক", price: 199, oldPrice: 260, image: "https://via.placeholder.com/320x420/1f1f1f/bdbdbd?text=Sample+Book+3" },
             "sample-4": { title: "নমুনা বই ৪", author: "লেখক", price: 150, oldPrice: 200, image: "https://via.placeholder.com/320x420/1f1f1f/bdbdbd?text=Sample+Book+4" },
 
-            "islami-quran-biggan": {
-                title: "কুরআন ও আধুনিক বিজ্ঞান",
-                author: "প্রফেসর মুহাম্মদ হামিদুর রহমান",
-                price: 390,
-                oldPrice: 520,
-                image: "https://via.placeholder.com/320x420/101820/ffd166?text=Islami+Book"
-            },
             "novel-himu-pack": {
                 title: "হিমু সমগ্র (নির্বাচিত)",
                 author: "হুমায়ূন আহমেদ",
@@ -2071,7 +2101,8 @@
         };
 
         // HINT: Weekly row-তে বই দেখাতে নিচের key গুলো দিন (key অবশ্যই BOOK_SOURCE এ থাকতে হবে)।
-        const WEEKLY_BOOK_KEYS = ["paradoxical-sajid", "himu-neelpoddo", "chouddogoshti"];
+        // এখানে খালি রেখে দিলে শুধু আপনার যোগ করা Custom বইগুলোই Weekly সেকশনে দেখাবে।
+        const WEEKLY_BOOK_KEYS = [];
 
         function getAutoBookKeys() {
             return Object.keys(BOOK_SOURCE).filter(function (k) { return !k.startsWith("sample-"); });
@@ -2254,6 +2285,36 @@
             updateWeeklySelectionCount();
         }
 
+        async function removeCustomWeeklyBook(bookId) {
+            if (!canEditWeeklyBooks()) {
+                alert("বুক মুছতে লগইন দরকার।");
+                return;
+            }
+            if (!bookId) return;
+            customCatalogData.weeklyBooks = (customCatalogData.weeklyBooks || []).filter(function (item) {
+                return item.id !== bookId;
+            });
+            Object.keys(customCatalogData.categoryCustomBooks || {}).forEach(function (slug) {
+                customCatalogData.categoryCustomBooks[slug] = (customCatalogData.categoryCustomBooks[slug] || []).filter(function (item) {
+                    return item.id !== bookId;
+                });
+            });
+            try {
+                const saveState = await saveCustomCatalogData();
+                await populateWeeklyRow();
+                populateCategoryRows();
+                await renderWeeklyAddedList();
+                if (saveState && saveState.synced === false) {
+                    showWeeklySyncStatus("Server sync হয়নি - বই লোকালিভাবে remove হয়েছে।", "err");
+                } else {
+                    showWeeklySyncStatus("Book remove সফল।", "ok");
+                }
+            } catch (err) {
+                showWeeklySyncStatus("Remove sync হয়নি।", "err");
+                alert((err && err.message) ? err.message : "বই remove করা যায়নি।");
+            }
+        }
+
         function updateWeeklySelectionCount() {
             const countBox = document.getElementById("weeklySelectedCount");
             if (!countBox) return;
@@ -2396,8 +2457,14 @@
             if (!row) return;
             const weeklyKeys = (WEEKLY_BOOK_KEYS && WEEKLY_BOOK_KEYS.length) ? WEEKLY_BOOK_KEYS : getAutoBookKeys();
             const baseBooks = resolveBooksFromKeys(weeklyKeys);
-            const customBooks = customCatalogData.weeklyBooks || [];
+            const customBooks = (customCatalogData.weeklyBooks || []).map(function (item) {
+                return Object.assign({}, item, { customWeekly: true });
+            });
             const books = baseBooks.concat(customBooks);
+            if (!books.length) {
+                row.innerHTML = '<div class="weekly-empty-message">Weekly Best Seller সেকশনটি ফাঁকা। উপরের ফরম থেকে বই যোগ করুন।</div>';
+                return;
+            }
             row.innerHTML = books.map(function (item) { return buildMiniCard(item); }).join("");
         }
 
@@ -2460,6 +2527,19 @@
             weeklyCategoryTarget.addEventListener("change", function () {
                 weeklyNewCategoryName.hidden = this.value !== "new-category";
                 weeklyNewCategoryName.required = this.value === "new-category";
+            });
+        }
+
+        const weeklyScrollArea = document.getElementById("weekly-scroll");
+        const weeklyScrollLeftBtn = document.querySelector(".weekly-scroll-left");
+        const weeklyScrollRightBtn = document.querySelector(".weekly-scroll-right");
+        if (weeklyScrollArea && weeklyScrollLeftBtn && weeklyScrollRightBtn) {
+            const scrollStep = 320;
+            weeklyScrollLeftBtn.addEventListener("click", function () {
+                weeklyScrollArea.scrollBy({ left: -scrollStep, behavior: "smooth" });
+            });
+            weeklyScrollRightBtn.addEventListener("click", function () {
+                weeklyScrollArea.scrollBy({ left: scrollStep, behavior: "smooth" });
             });
         }
 
