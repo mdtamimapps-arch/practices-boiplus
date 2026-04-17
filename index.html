@@ -1982,7 +1982,8 @@
         //   oldPrice: 550,
         //   image: "https://your-image-link.jpg"
         // }
-        // তারপর WEEKLY_BOOK_KEYS অথবা CATEGORY_BOOK_KEYS এ সেই key বসান।
+        // যদি ক্যাটাগরি metadata ব্যবহার করতে চান, BOOK_SOURCE এর মধ্যে category বা categories দিন।
+        // অন্যথায় WEEKLY_BOOK_KEYS অথবা CATEGORY_BOOK_KEYS এ সেই key বসান।
         // image URL কাজ না করলে placeholder দেখাবে (onerror fallback add করা আছে)।
         // ===========================
         // HINT: সব mini row (Weekly + Category) এর বই এক জায়গা থেকে edit করতে চাইলে নিচে title/author/price/oldPrice/image বদলান।
@@ -1992,29 +1993,33 @@
         //   author: "লেখকের নাম",
         //   price: 350,        // বর্তমান মূল্য
         //   oldPrice: 500,     // আগের মূল্য (auto discount% হিসাব হবে)
-        //   image: "https://your-image-link.jpg"
+        //   image: "https://your-image-link.jpg",
+        //   category: "novel"          // অথবা categories: ["novel", "story"]
         // }
         const BOOK_SOURCE = {
             "paradoxical-sajid": {
                 title: "প্যারাডক্সিক্যাল সাজিদ",
                 author: "আরিফ আজাদ",
-                price: 240,
-                oldPrice: 300,
-                image: "https://scontent.fdac190-1.fna.fbcdn.net/v/t39.30808-1/444487663_473076435248586_8270301554850071899_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=108&ccb=1-7&_nc_sid=1d2534&_nc_eui2=AeEduylGj6A1nV4j4mJrs9A9898WhjLMNlzz3xaGMsw2XJJU4yIFTQqoXCPxL5ZeqWb2H5hy8hhU0OhdTjrUkyDN&_nc_ohc=B7IuaZDtTHgQ7kNvwGqi2IN&_nc_oc=Adqe8JRSe6VTNp3u_blSR81FiiPe6PO2dZlomRhZ-6Z5gATatP8P0IKFxxD6_VLQLCI&_nc_zt=24&_nc_ht=scontent.fdac190-1.fna&_nc_gid=07OIiCsZeJIn08zJ-5rYZw&_nc_ss=7a3a8&oh=00_Af1igkeKRANNmIGPqv0f9FSkd2J541hQF_AG_d05tgVwCA&oe=69D588B4"
+                price: 210,
+                oldPrice: 225,
+                image: "https://pbs.com.bd/_next/image?url=https%3A%2F%2Ffs.pbs.com.bd%2FDIR%2FCom%2FPBS%2FProduct%2FImageDetails%2F2100768.jpg&w=640&q=75",
+                category: "islam"
             },
             "himu-neelpoddo": {
                 title: "হিমুর হাতে কয়েকটি নীলপদ্ম",
                 author: "হুমায়ূন আহমেদ",
-                price: 180,
-                oldPrice: 230,
-                image: "https://scontent.fdac190-1.fna.fbcdn.net/v/t39.30808-6/533832210_122149491356791984_6719225686092712947_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_eui2=AeFZEA4lH-V3yQ1CCnrlQ1CwkEjWPyMXn1SQSNY_IxefVDH7kfNhBNBGVtLiSVbyRgXksBf9wqXXAY-fs6yUQs1i&_nc_ohc=pI_-cnIoJoEQ7kNvwFtyueb&_nc_oc=AdrpDQen1HFawKzLR2jHuNw-xNjAZ5hjdZGbzNg1PRQPsxPI_dniDtzo_SL8KDxYqM4&_nc_zt=23&_nc_ht=scontent.fdac190-1.fna&_nc_gid=ZUDQP29JFIIRhG521mvCUw&_nc_ss=7a3a8&oh=00_Af1xjmyN6x6hntOiUM-fkXqIBFYi2VkPCyT88yJdiw11Ww&oe=69D59EE0"
+                price: 320,
+                oldPrice: 260,
+                image: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1312929312i/3922596.jpg",
+                category: "novel"
             },
             "chouddogoshti": {
                 title: "প্রোগ্রামিংয়ের চৌদ্দগোষ্ঠী",
                 author: "ঝংকার মাহবুব",
-                price: 250,
-                oldPrice: 320,
-                image: "https://scontent.fdac190-1.fna.fbcdn.net/v/t39.30808-6/612608679_122182720874381463_2758780002660335582_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=2a1932&_nc_eui2=AeGEKdmZu59w4k3a1_SI6tVaJzyOZyt8kXwnPI5nK3yRfPZAEwnmWl4BP6h5WhKi2ABZcY-zHE7vYlvwybeU6EVv&_nc_ohc=tDTmb9nTVl0Q7kNvwF7FvLa&_nc_oc=AdoDZUtQ9XSTqOdIIePbZz6fI936x7Q6rVwsgMl5WxVpVjucawnUnFDdaTrxtC1xJj8&_nc_zt=23&_nc_ht=scontent.fdac190-1.fna&_nc_gid=9w01qLXFAjrVJbx0nI7bBQ&_nc_ss=7a3a8&oh=00_Af1t4kQ_bemTWLWmP1x52AEk1NQgIV6hrtWWv7QH3aEiHQ&oe=69D5AC35"
+                price: 300,
+                oldPrice: 420,
+                image: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1525996046i/40098190.jpg",
+                category: "story"
             },
             "sample-1": { title: "নমুনা বই ১", author: "লেখক", price: 320, oldPrice: 400, image: "https://via.placeholder.com/320x420/1f1f1f/bdbdbd?text=Sample+Book+1" },
             "sample-2": { title: "নমুনা বই ২", author: "লেখক", price: 285, oldPrice: 350, image: "https://via.placeholder.com/320x420/1f1f1f/bdbdbd?text=Sample+Book+2" },
@@ -2024,79 +2029,90 @@
             "novel-himu-pack": {
                 title: "হিমু সমগ্র (নির্বাচিত)",
                 author: "হুমায়ূন আহমেদ",
-                price: 480,
-                oldPrice: 650,
-                image: "https://via.placeholder.com/320x420/1f1f1f/f4a261?text=Novel+Book"
+                price: 780,
+                oldPrice: 1000,
+                image: "https://fs.pbs.com.bd/DIR/Com/PBS/Product/ImageDetails/1812362.jpg",
+                category: "novel"
             },
             "admission-varsity-math": {
                 title: "ভার্সিটি ভর্তি ম্যাথ গাইড",
                 author: "রাকিব হাসান",
                 price: 310,
                 oldPrice: 420,
-                image: "https://via.placeholder.com/320x420/1f2a44/90caf9?text=Admission+Book"
+                image: "https://pbs.com.bd/_next/image?url=https%3A%2F%2Ffs.pbs.com.bd%2FDIR%2FCom%2FPBS%2FProduct%2FImageDetails%2F2501475.jpg&w=640&q=75",
+                category: "admission"
             },
             "kids-fun-learn": {
                 title: "শিশুদের মজা করে শেখা",
                 author: "নাসরিন আক্তার",
                 price: 220,
                 oldPrice: 300,
-                image: "https://via.placeholder.com/320x420/263238/80cbc4?text=Kids+Book"
+                image: "https://via.placeholder.com/320x420/263238/80cbc4?text=Kids+Book",
+                category: "kids"
             },
             "self-atomic-habits-bn": {
                 title: "অ্যাটমিক হ্যাবিটস (বাংলা অনুবাদ)",
                 author: "জেমস ক্লিয়ার (অনুবাদ)",
                 price: 360,
                 oldPrice: 500,
-                image: "https://via.placeholder.com/320x420/2a1f3d/c5a3ff?text=Self+Help"
+                image: "https://via.placeholder.com/320x420/2a1f3d/c5a3ff?text=Self+Help",
+                category: "self"
             },
             "thriller-nemesis": {
                 title: "নেমেসিস",
                 author: "মোহাম্মদ নাজিম উদ্দিন",
                 price: 340,
                 oldPrice: 450,
-                image: "https://via.placeholder.com/320x420/1a1a1a/ef5350?text=Thriller"
+                image: "https://via.placeholder.com/320x420/1a1a1a/ef5350?text=Thriller",
+                category: "thriller"
             },
             "wb-feluda": {
                 title: "ফেলুদা সমগ্র (১ম খণ্ড)",
                 author: "সত্যজিৎ রায়",
-                price: 420,
-                oldPrice: 560,
-                image: "https://via.placeholder.com/320x420/1d3557/a8dadc?text=West+Bengal"
+                price: 1800,
+                oldPrice: 2000,
+                image: "https://pbs.com.bd/_next/image?url=https%3A%2F%2Ffs.pbs.com.bd%2FDIR%2FCom%2FPBS%2FProduct%2FImageDetails%2F1813234.jpg&w=640&q=75",
+                category: "wb"
             },
             "english-rich-dad": {
                 title: "Rich Dad Poor Dad",
                 author: "Robert T. Kiyosaki",
                 price: 430,
                 oldPrice: 590,
-                image: "https://via.placeholder.com/320x420/14213d/fca311?text=English+Book"
+                image: "https://via.placeholder.com/320x420/14213d/fca311?text=English+Book",
+                category: "en"
             },
             "story-short-stories": {
                 title: "নির্বাচিত ছোটগল্প",
                 author: "বিভিন্ন লেখক",
                 price: 260,
                 oldPrice: 350,
-                image: "https://via.placeholder.com/320x420/3a0f0f/f6bd60?text=Story+Book"
+                image: "https://via.placeholder.com/320x420/3a0f0f/f6bd60?text=Story+Book",
+                category: "story"
             },
             "freelance-upwork-roadmap": {
                 title: "Upwork Freelancing Roadmap",
-                author: "তামিম হাসান",
+                author: "Dalal TAmim",
                 price: 380,
                 oldPrice: 520,
-                image: "https://via.placeholder.com/320x420/0b3d2e/84dcc6?text=Freelancing"
+                image: "https://via.placeholder.com/320x420/0b3d2e/84dcc6?text=Freelancing",
+                categories: ["freelance", "self"]
             },
             "sci-ai-future": {
                 title: "কৃত্রিম বুদ্ধিমত্তার ভবিষ্যৎ",
                 author: "ড. মাহবুব আলম",
                 price: 350,
                 oldPrice: 470,
-                image: "https://via.placeholder.com/320x420/001219/94d2bd?text=Science+Tech"
+                image: "https://via.placeholder.com/320x420/001219/94d2bd?text=Science+Tech",
+                category: "sci"
             },
             "hist-liberation-war": {
                 title: "বাংলাদেশের মুক্তিযুদ্ধের ইতিহাস",
                 author: "মুনতাসীর মামুন",
                 price: 410,
                 oldPrice: 550,
-                image: "https://via.placeholder.com/320x420/2b2d42/ffb4a2?text=History"
+                image: "https://via.placeholder.com/320x420/2b2d42/ffb4a2?text=History",
+                category: "hist"
             }
         };
 
@@ -2114,9 +2130,29 @@
             }).filter(Boolean);
         }
 
+        function getBookCategorySlugs(key, item) {
+            if (!item || typeof item !== "object") return [];
+            if (Array.isArray(item.categories) && item.categories.length) {
+                return item.categories.map(function (cat) { return String(cat).trim(); }).filter(Boolean);
+            }
+            if (item.category) {
+                return [String(item.category).trim()];
+            }
+            return Object.keys(DEFAULT_CATEGORY_BOOK_KEYS).filter(function (slug) {
+                return Array.isArray(DEFAULT_CATEGORY_BOOK_KEYS[slug]) && DEFAULT_CATEGORY_BOOK_KEYS[slug].includes(key);
+            });
+        }
+
+        function getBookKeysForCategory(slug) {
+            return Object.keys(BOOK_SOURCE).filter(function (key) {
+                return getBookCategorySlugs(key, BOOK_SOURCE[key]).includes(slug);
+            });
+        }
+
         // HINT: নতুন ক্যাটাগরি রো যোগ করতে নিচে নতুন object দিন: { title: "ক্যাটাগরি নাম", slug: "unique-slug" }
         const DEFAULT_CATEGORY_ROW_DEFS = [
             { title: "ইসলামি বই", slug: "islam" },
+            { title: "আর কি দেওয়া যায়", slug: "ভাবো ভাবো" },
             { title: "উপন্যাস", slug: "novel" },
             { title: "ভর্তি ও প্রস্তুতি পরীক্ষা", slug: "admission" },
             { title: "শিশু-কিশোর বই", slug: "kids", sectionId: "kids" },
@@ -2132,6 +2168,7 @@
 
         // HINT: প্রতিটি category row-তে কোন বই দেখাবেন সেটা slug ধরে এখানে key list দিয়ে দিন।
         // Example: islam: ["paradoxical-sajid", "new-book-key", ...]
+        // যদি BOOK_SOURCE এর বইয়ের metadata এ category / categories দেওয়া থাকে, সেগুলোও auto ওই row-এ দেখানো হবে।
         // যদি কোনো slug এ list না দেন/খালি রাখেন, auto non-sample books দেখাবে।
         const DEFAULT_CATEGORY_BOOK_KEYS = {
             islam: ["islami-quran-biggan"],
@@ -2195,6 +2232,19 @@
                 .replace(/[^a-z0-9\u0980-\u09ff]+/g, "-")
                 .replace(/^-+|-+$/g, "")
                 .slice(0, 48);
+        }
+
+        function findCategorySlug(titleOrSlug) {
+            const normalized = String(titleOrSlug || "").trim().toLowerCase();
+            if (!normalized) return "";
+            const allDefs = getCombinedCategoryDefs();
+            for (let i = 0; i < allDefs.length; i++) {
+                const def = allDefs[i];
+                if (!def || !def.slug) continue;
+                if (def.slug === normalized) return def.slug;
+                if (String(def.title || "").trim().toLowerCase() === normalized) return def.slug;
+            }
+            return "";
         }
 
         async function loadCustomCatalogData() {
@@ -2325,14 +2375,32 @@
         }
 
         function ensureCategoryDef(slug, title) {
-            if (!slug) return;
-            const existsDefault = DEFAULT_CATEGORY_ROW_DEFS.some(function (d) { return d.slug === slug; });
-            const existsCustom = (customCatalogData.categoryDefs || []).some(function (d) { return d.slug === slug; });
-            if (!existsDefault && !existsCustom) {
-                (customCatalogData.categoryDefs || []).push({ title: title || slug, slug: slug });
+            const normalizedSlug = slugifyCategoryName(slug || title || "");
+            if (!normalizedSlug) return;
+            const normalizedTitle = String(title || slug || "").trim();
+
+            if (!customCatalogData.categoryDefs) {
+                customCatalogData.categoryDefs = [];
             }
-            if (!customCatalogData.categoryCustomBooks[slug]) {
-                customCatalogData.categoryCustomBooks[slug] = [];
+
+            const existsDefault = DEFAULT_CATEGORY_ROW_DEFS.some(function (d) { return d.slug === normalizedSlug; });
+            const existingIndex = customCatalogData.categoryDefs.findIndex(function (d) { return d.slug === normalizedSlug; });
+            if (existingIndex >= 0) {
+                customCatalogData.categoryDefs[existingIndex].title = normalizedTitle || customCatalogData.categoryDefs[existingIndex].title;
+            } else if (!existsDefault) {
+                customCatalogData.categoryDefs.push({ title: normalizedTitle || normalizedSlug, slug: normalizedSlug });
+            }
+
+            const seenSlugs = new Set();
+            customCatalogData.categoryDefs = customCatalogData.categoryDefs.filter(function (d) {
+                if (!d || !d.slug) return false;
+                if (seenSlugs.has(d.slug)) return false;
+                seenSlugs.add(d.slug);
+                return true;
+            });
+
+            if (!customCatalogData.categoryCustomBooks[normalizedSlug]) {
+                customCatalogData.categoryCustomBooks[normalizedSlug] = [];
             }
         }
 
@@ -2352,16 +2420,23 @@
             }
             if (targetValue === "new-category") {
                 const newName = String(newCategoryName || "").trim();
-                const slug = slugifyCategoryName(newName);
-                if (!slug || !newName) {
+                if (!newName) {
+                    throw new Error("নতুন category নাম দিন।");
+                }
+                const existingSlug = findCategorySlug(newName);
+                const slug = existingSlug || slugifyCategoryName(newName);
+                if (!slug) {
                     throw new Error("নতুন category নাম দিন।");
                 }
                 ensureCategoryDef(slug, newName);
+                customCatalogData.categoryCustomBooks[slug] = customCatalogData.categoryCustomBooks[slug] || [];
                 customCatalogData.categoryCustomBooks[slug].push(baseBook);
                 return;
             }
-            ensureCategoryDef(targetValue, targetValue);
-            customCatalogData.categoryCustomBooks[targetValue].push(baseBook);
+            const slug = findCategorySlug(targetValue) || targetValue;
+            ensureCategoryDef(slug, slug);
+            customCatalogData.categoryCustomBooks[slug] = customCatalogData.categoryCustomBooks[slug] || [];
+            customCatalogData.categoryCustomBooks[slug].push(baseBook);
         }
 
         async function addWeeklyCustomBook(e) {
@@ -2476,8 +2551,11 @@
             host.innerHTML = rowDefs.map(function (def) {
                 const sid = def.sectionId ? def.sectionId : "cat-row-" + def.slug;
                 const configured = DEFAULT_CATEGORY_BOOK_KEYS[def.slug];
-                const keys = (configured && configured.length) ? configured : autoKeys;
-                const baseCards = resolveBooksFromKeys(keys);
+                const explicitKeys = Array.isArray(configured) ? configured : [];
+                const metaKeys = getBookKeysForCategory(def.slug);
+                const keys = explicitKeys.concat(metaKeys.filter(function (key) { return !explicitKeys.includes(key); }));
+                const finalKeys = (keys && keys.length) ? keys : autoKeys;
+                const baseCards = resolveBooksFromKeys(finalKeys);
                 const customCards = customCatalogData.categoryCustomBooks[def.slug] || [];
                 const cards = baseCards.concat(customCards).map(function (item) {
                     return buildMiniCard(item);
