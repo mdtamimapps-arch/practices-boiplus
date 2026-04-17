@@ -119,6 +119,32 @@
         .top-scroll-strip {
             position: relative;
             z-index: 1;
+            transition: transform 0.35s ease, opacity 0.35s ease;
+        }
+
+        body.scrolled-minimal .top-scroll-strip,
+        body.scrolled-minimal .categories-panel,
+        body.scrolled-minimal .pill-row,
+        body.scrolled-minimal .header-sub,
+        body.scrolled-minimal .search-wrap.elec,
+        body.scrolled-minimal .app-cta {
+            opacity: 0;
+            transform: translateY(-12px);
+            pointer-events: none;
+            height: 0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        body.scrolled-minimal .header-main {
+            grid-template-columns: auto 1fr;
+            align-items: center;
+        }
+        body.scrolled-minimal .search-wrap.wide {
+            width: 100%;
+        }
+        body.scrolled-minimal .logo-wrap {
+            opacity: 1;
         }
 
         /* কাস্টমার কেয়ার / ডোনেশন স্ট্রিপ */
@@ -1569,9 +1595,16 @@
             if (modeOpenBtn) {
                 modeOpenBtn.addEventListener("click", openViewModeSelector);
             }
-            window.addEventListener("scroll", updateAndroidHeaderCompactState, { passive: true });
-            window.addEventListener("resize", updateAndroidHeaderCompactState);
+            window.addEventListener("scroll", function () {
+                updateAndroidHeaderCompactState();
+                updateMinimalHeaderState();
+            }, { passive: true });
+            window.addEventListener("resize", function () {
+                updateAndroidHeaderCompactState();
+                updateMinimalHeaderState();
+            });
             updateAndroidHeaderCompactState();
+            updateMinimalHeaderState();
         }
 
         function updateAndroidHeaderCompactState() {
@@ -1582,6 +1615,15 @@
                 document.body.classList.add("android-header-compact");
             } else if (y < 8) {
                 document.body.classList.remove("android-header-compact");
+            }
+        }
+
+        function updateMinimalHeaderState() {
+            const y = window.scrollY || window.pageYOffset || 0;
+            if (y > 60) {
+                document.body.classList.add("scrolled-minimal");
+            } else {
+                document.body.classList.remove("scrolled-minimal");
             }
         }
 
